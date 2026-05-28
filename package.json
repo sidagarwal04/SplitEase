@@ -4,6 +4,16 @@
   "version": "0.1.0",
   "type": "module",
   "description": "A modern Splitwise clone — split expenses with friends without the friction.",
+  "license": "MIT",
+  "author": "Siddhant Agarwal",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sidagarwal04/splitease.git"
+  },
+  "homepage": "https://github.com/sidagarwal04/splitease#readme",
+  "bugs": {
+    "url": "https://github.com/sidagarwal04/splitease/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
