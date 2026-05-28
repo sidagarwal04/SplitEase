@@ -46,7 +46,7 @@ export default function Dashboard() {
             </div>
             <h3 className="heading text-lg mb-1">Make life easier.</h3>
             <p className="text-sm text-text-muted">
-              Add a group for each shared context — trip, flatmates, lunch crew — and SplitEase keeps every receipt, share and IOU tidy.
+              Add a group for each shared context — trip, flatmates, lunch crew — and OweNow keeps every receipt, share and IOU tidy.
             </p>
           </div>
         </div>

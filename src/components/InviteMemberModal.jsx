@@ -32,7 +32,7 @@ export default function InviteMemberModal({ open, onClose, group }) {
     <Modal open={open} onClose={onClose} title="Invite to group">
       <form onSubmit={handleSubmit} className="space-y-4">
         <p className="text-sm text-text-muted">
-          We'll add them straight to the group if they already have a SplitEase account, otherwise we'll send them an invite email.
+          We'll add them straight to the group if they already have an OweNow account, otherwise we'll send them an invite email.
         </p>
         <div>
           <label className="label">Email</label>

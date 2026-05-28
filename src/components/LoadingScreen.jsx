@@ -20,7 +20,7 @@ export default function LoadingScreen() {
             transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
           />
         </div>
-        <p className="text-text-muted font-display tracking-wide">SplitEase</p>
+        <p className="text-text-muted font-display tracking-wide">OweNow</p>
       </motion.div>
     </div>
   );

@@ -59,10 +59,10 @@ export const handler = async (event) => {
       return json(200, { added: true, profile: existingProfile });
     }
 
-    // Not on SplitEase yet — send an invite email
+    // Not on OweNow yet — send an invite email
     const apiKey = process.env.RESEND_API_KEY;
-    const from = process.env.RESEND_FROM_EMAIL || 'SplitEase <onboarding@resend.dev>';
-    const appUrl = process.env.VITE_APP_URL || 'https://splitease.app';
+    const from = process.env.RESEND_FROM_EMAIL || 'OweNow <onboarding@resend.dev>';
+    const appUrl = process.env.VITE_APP_URL || 'https://owenow.app';
 
     if (!apiKey) {
       return json(200, {
@@ -87,7 +87,7 @@ export const handler = async (event) => {
       body: JSON.stringify({
         from,
         to: [normalized],
-        subject: `You've been invited to ${groupName ?? 'a group'} on SplitEase`,
+        subject: `You've been invited to ${groupName ?? 'a group'} on OweNow`,
         html,
       }),
     });
@@ -106,11 +106,11 @@ function inviteEmail({ groupName, inviterName, appUrl }) {
   return `<!doctype html>
 <html><body style="background:#0A0F1E;color:#E6EAF2;font-family:Inter,system-ui,sans-serif;margin:0;padding:32px;">
   <div style="max-width:480px;margin:auto;background:#111A33;border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:32px;">
-    <div style="font-size:28px;font-weight:800;background:linear-gradient(135deg,#00D4AA,#6366F1);-webkit-background-clip:text;color:transparent;">SplitEase</div>
+    <div style="font-size:28px;font-weight:800;background:linear-gradient(135deg,#00D4AA,#6366F1);-webkit-background-clip:text;color:transparent;">OweNow</div>
     <h2 style="margin-top:24px;">You've been invited!</h2>
     <p style="color:#8A93A6;line-height:1.5;">
       <strong style="color:#fff;">${escapeHtml(inviterName)}</strong> invited you to join the group
-      <strong style="color:#fff;">"${escapeHtml(groupName ?? 'a group')}"</strong> on SplitEase — the simplest way to split expenses with friends.
+      <strong style="color:#fff;">"${escapeHtml(groupName ?? 'a group')}"</strong> on OweNow — the simplest way to split expenses with friends.
     </p>
     <a href="${appUrl}" style="display:inline-block;margin-top:24px;background:#00D4AA;color:#0A0F1E;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:600;">
       Join group

@@ -26,7 +26,7 @@ export default function Navbar() {
           <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-accent to-secondary grid place-items-center shadow-[0_0_24px_-6px_rgba(0,212,170,0.5)]">
             <span className="text-bg font-display font-extrabold">S</span>
           </div>
-          <span className="heading text-lg hidden sm:block">SplitEase</span>
+          <span className="heading text-lg hidden sm:block">OweNow</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">

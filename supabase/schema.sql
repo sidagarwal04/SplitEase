@@ -1,5 +1,5 @@
 -- ============================================================================
--- SplitEase — Supabase schema, policies, triggers and storage.
+-- OweNow — Supabase schema, policies, triggers and storage.
 -- Paste this into the Supabase SQL editor (or use `supabase db push`).
 -- Safe to re-run: uses IF NOT EXISTS / drop-and-create policies where needed.
 -- ============================================================================

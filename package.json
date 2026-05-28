@@ -1,5 +1,5 @@
 {
-  "name": "splitease",
+  "name": "owenow",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -8,11 +8,11 @@
   "author": "Siddhant Agarwal",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sidagarwal04/splitease.git"
+    "url": "https://github.com/sidagarwal04/owenow.git"
   },
-  "homepage": "https://github.com/sidagarwal04/splitease#readme",
+  "homepage": "https://github.com/sidagarwal04/owenow#readme",
   "bugs": {
-    "url": "https://github.com/sidagarwal04/splitease/issues"
+    "url": "https://github.com/sidagarwal04/owenow/issues"
   },
   "scripts": {
     "dev": "vite",

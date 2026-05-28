@@ -1,4 +1,4 @@
-# SplitEase
+# OweNow
 
 A modern Splitwise clone — split expenses with friends, without the friction.
 

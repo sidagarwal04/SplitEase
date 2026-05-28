@@ -34,7 +34,7 @@ export default function Login() {
           <div className="inline-flex items-center justify-center h-16 w-16 rounded-3xl bg-gradient-to-br from-accent to-secondary shadow-[0_0_60px_-12px_rgba(0,212,170,0.6)] mb-5">
             <span className="font-display font-extrabold text-3xl text-bg">S</span>
           </div>
-          <h1 className="heading text-4xl mb-2">SplitEase</h1>
+          <h1 className="heading text-4xl mb-2">OweNow</h1>
           <p className="text-text-muted">Split expenses with friends. Without the friction.</p>
         </div>
 
