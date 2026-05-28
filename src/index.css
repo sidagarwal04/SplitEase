@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Outfit', system-ui, sans-serif;
+  background-color: #0a0f1e;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 212, 170, 0.08), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(99, 102, 241, 0.06), transparent 50%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Subtle scrollbar */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-border bg-bg-card/70 shadow-card backdrop-blur-sm transition-all duration-300;
+  }
+  .card-hover {
+    @apply hover:border-border-strong hover:shadow-cardHover hover:-translate-y-0.5;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 select-none disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-bg hover:bg-accent/90 active:scale-[0.98] shadow-[0_4px_24px_-8px_rgba(0,212,170,0.6)];
+  }
+  .btn-secondary {
+    @apply btn bg-secondary/15 text-secondary border border-secondary/30 hover:bg-secondary/25;
+  }
+  .btn-ghost {
+    @apply btn bg-white/[0.03] text-text hover:bg-white/[0.06] border border-border;
+  }
+  .btn-danger {
+    @apply btn bg-danger/15 text-danger border border-danger/30 hover:bg-danger/25;
+  }
+  .input {
+    @apply w-full rounded-xl border border-border bg-bg-subtle/80 px-4 py-2.5 text-sm text-text placeholder:text-text-subtle outline-none transition-all focus:border-accent/60 focus:ring-2 focus:ring-accent/20;
+  }
+  .label {
+    @apply text-xs font-medium uppercase tracking-wider text-text-muted mb-1.5 block;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-white/[0.03] px-2.5 py-1 text-xs text-text-muted;
+  }
+  .heading {
+    @apply font-display font-bold tracking-tight text-text;
+  }
+  .skeleton {
+    @apply relative overflow-hidden rounded-md bg-white/[0.04];
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full animate-shimmer;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.04),
+      transparent
+    );
+    background-size: 200% 100%;
+  }
+}
+
+/* Selection */
+::selection {
+  background: rgba(0, 212, 170, 0.25);
+  color: #fff;
+}
