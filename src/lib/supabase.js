@@ -14,7 +14,10 @@ export const supabase = createClient(url ?? 'http://localhost', anonKey ?? 'publ
   auth: {
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: true,
+    // Disable auto-detection; we exchange the OAuth code manually in AuthProvider
+    // to avoid a race between detectSessionInUrl and getSession() that can leave
+    // the client thinking no session exists after a successful Google callback.
+    detectSessionInUrl: false,
     flowType: 'pkce',
   },
   realtime: {

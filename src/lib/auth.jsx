@@ -31,6 +31,16 @@ export function AuthProvider({ children }) {
 
     (async () => {
       try {
+        const url = new URL(window.location.href);
+        const code = url.searchParams.get('code');
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (error) console.error('[OweNow] exchangeCodeForSession error:', error);
+          url.searchParams.delete('code');
+          url.searchParams.delete('state');
+          window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+        }
+
         const { data, error } = await supabase.auth.getSession();
         if (error) console.error('[OweNow] getSession error:', error);
         if (!mounted) return;
