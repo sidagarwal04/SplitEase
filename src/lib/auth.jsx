@@ -29,16 +29,31 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let mounted = true;
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!mounted) return;
-      setSession(data.session ?? null);
-      await loadProfile(data.session?.user?.id);
-      setLoading(false);
-    });
+    (async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) console.error('[OweNow] getSession error:', error);
+        if (!mounted) return;
+        setSession(data?.session ?? null);
+        try {
+          await loadProfile(data?.session?.user?.id);
+        } catch (e) {
+          console.error('[OweNow] loadProfile error:', e);
+        }
+      } catch (e) {
+        console.error('[OweNow] auth init failed:', e);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
 
     const { data: sub } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
       setSession(newSession ?? null);
-      await loadProfile(newSession?.user?.id);
+      try {
+        await loadProfile(newSession?.user?.id);
+      } catch (e) {
+        console.error('[OweNow] loadProfile (onAuthStateChange) error:', e);
+      }
     });
 
     return () => {
