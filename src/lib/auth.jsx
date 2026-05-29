@@ -45,11 +45,10 @@ export function AuthProvider({ children }) {
         if (error) console.error('[OweNow] getSession error:', error);
         if (!mounted) return;
         setSession(data?.session ?? null);
-        try {
-          await loadProfile(data?.session?.user?.id);
-        } catch (e) {
-          console.error('[OweNow] loadProfile error:', e);
-        }
+        // Fire-and-forget — profile is metadata; don't block the loading flag on it.
+        loadProfile(data?.session?.user?.id).catch((e) =>
+          console.error('[OweNow] loadProfile error:', e)
+        );
       } catch (e) {
         console.error('[OweNow] auth init failed:', e);
       } finally {
@@ -57,13 +56,11 @@ export function AuthProvider({ children }) {
       }
     })();
 
-    const { data: sub } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession ?? null);
-      try {
-        await loadProfile(newSession?.user?.id);
-      } catch (e) {
-        console.error('[OweNow] loadProfile (onAuthStateChange) error:', e);
-      }
+      loadProfile(newSession?.user?.id).catch((e) =>
+        console.error('[OweNow] loadProfile (onAuthStateChange) error:', e)
+      );
     });
 
     return () => {
