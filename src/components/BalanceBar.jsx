@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { formatMoney } from '../utils/formatters.js';
 import CountUp from './CountUp.jsx';
 
-export default function BalanceBar({ owed = 0, owing = 0, currency = 'USD' }) {
+export default function BalanceBar({ owed = 0, owing = 0, currency = 'INR' }) {
   const net = owed - owing;
   const positive = net >= 0;
 

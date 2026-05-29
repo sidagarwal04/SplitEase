@@ -53,7 +53,7 @@ create table if not exists public.expenses (
   paid_by uuid not null references public.profiles (id) on delete restrict,
   title text not null,
   amount numeric(14, 2) not null check (amount >= 0),
-  currency text not null default 'USD',
+  currency text not null default 'INR',
   category text default 'general',
   date date not null default current_date,
   receipt_url text,

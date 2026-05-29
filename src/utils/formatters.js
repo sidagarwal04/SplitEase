@@ -1,10 +1,24 @@
 import { formatDistanceToNow, format, isToday, isYesterday } from 'date-fns';
-import { currencySymbol } from './currency.js';
+import { currencySymbol, DEFAULT_CURRENCY } from './currency.js';
 
-export function formatMoney(amount, currency = 'USD', { showSign = false } = {}) {
+// Map currency to the locale we want number-grouping to follow. INR uses the
+// Indian numbering system (1,00,000 instead of 100,000).
+const LOCALE_BY_CURRENCY = {
+  INR: 'en-IN',
+  USD: 'en-US',
+  EUR: 'en-IE',
+  GBP: 'en-GB',
+  JPY: 'ja-JP',
+  CAD: 'en-CA',
+  AUD: 'en-AU',
+  SGD: 'en-SG',
+};
+
+export function formatMoney(amount, currency = DEFAULT_CURRENCY, { showSign = false } = {}) {
   const n = Number(amount) || 0;
   const sym = currencySymbol(currency);
-  const formatted = new Intl.NumberFormat('en-US', {
+  const locale = LOCALE_BY_CURRENCY[currency] ?? 'en-US';
+  const formatted = new Intl.NumberFormat(locale, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(Math.abs(n));

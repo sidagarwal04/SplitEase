@@ -111,7 +111,7 @@ export default function SettleUpModal({ open, onClose, group, members = [], sugg
           />
           {amount && (
             <p className="text-xs text-text-muted mt-1.5">
-              Recording {formatMoney(Number(amount), group?.currency || 'USD')}
+              Recording {formatMoney(Number(amount), group?.currency || 'INR')}
             </p>
           )}
         </div>

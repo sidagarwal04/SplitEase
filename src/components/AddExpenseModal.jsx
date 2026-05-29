@@ -5,7 +5,7 @@ import Avatar from './Avatar.jsx';
 import { useAuth } from '../lib/auth.jsx';
 import { useCreateExpense, useUpdateExpense } from '../hooks/useExpenses.js';
 import { CATEGORIES, categoryEmoji } from '../utils/formatters.js';
-import { CURRENCIES } from '../utils/currency.js';
+import { CURRENCIES, DEFAULT_CURRENCY } from '../utils/currency.js';
 import toast from 'react-hot-toast';
 
 const SPLIT_TYPES = [
@@ -21,7 +21,7 @@ export default function AddExpenseModal({ open, onClose, group, members = [], ex
 
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
-  const [currency, setCurrency] = useState('USD');
+  const [currency, setCurrency] = useState(group?.currency || DEFAULT_CURRENCY);
   const [paidBy, setPaidBy] = useState(user?.id ?? '');
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [category, setCategory] = useState('general');
@@ -39,7 +39,7 @@ export default function AddExpenseModal({ open, onClose, group, members = [], ex
     if (expense) {
       setTitle(expense.title);
       setAmount(String(expense.amount));
-      setCurrency(expense.currency || 'USD');
+      setCurrency(expense.currency || group?.currency || DEFAULT_CURRENCY);
       setPaidBy(expense.paid_by);
       setDate(expense.date?.slice(0, 10) ?? new Date().toISOString().slice(0, 10));
       setCategory(expense.category || 'general');
@@ -53,7 +53,7 @@ export default function AddExpenseModal({ open, onClose, group, members = [], ex
     } else {
       setTitle('');
       setAmount('');
-      setCurrency('USD');
+      setCurrency(group?.currency || DEFAULT_CURRENCY);
       setPaidBy(user?.id ?? '');
       setDate(new Date().toISOString().slice(0, 10));
       setCategory('general');

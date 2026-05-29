@@ -1,6 +1,6 @@
 import { json } from './_shared.js';
 
-// GET /api/convert?from=USD&to=EUR&amount=100
+// GET /api/convert?from=INR&to=USD&amount=100
 // Uses ExchangeRate.host (free, no key) by default, or exchangerate-api.com
 // if EXCHANGE_RATE_API_KEY is set. Caches in-memory for 1 hour per process.
 const cache = new Map(); // key: `${from}->${to}` => { rate, fetchedAt }
@@ -10,8 +10,8 @@ export const handler = async (event) => {
   if (event.httpMethod !== 'GET') return json(405, { error: 'Method not allowed' });
 
   const params = event.queryStringParameters || {};
-  const from = (params.from || 'USD').toUpperCase();
-  const to = (params.to || 'USD').toUpperCase();
+  const from = (params.from || 'INR').toUpperCase();
+  const to = (params.to || 'INR').toUpperCase();
   const amount = Number(params.amount || 0);
 
   if (!Number.isFinite(amount)) return json(400, { error: 'invalid amount' });

@@ -4,7 +4,7 @@ import { Users, ArrowUpRight } from 'lucide-react';
 import { formatMoney } from '../utils/formatters.js';
 import CountUp from './CountUp.jsx';
 
-export default function GroupCard({ group, balance = 0, memberCount = 0, currency = 'USD' }) {
+export default function GroupCard({ group, balance = 0, memberCount = 0, currency = 'INR' }) {
   const youAreOwed = balance > 0;
   const youOwe = balance < 0;
   const settled = Math.abs(balance) < 0.01;
