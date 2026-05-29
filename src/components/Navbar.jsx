@@ -3,6 +3,7 @@ import { Bell, LogOut, Home, User as UserIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../lib/auth.jsx';
 import Avatar from './Avatar.jsx';
+import Logo from './Logo.jsx';
 import NotificationPanel from './NotificationPanel.jsx';
 import { useUnreadCount } from '../hooks/useNotifications.js';
 
@@ -23,9 +24,10 @@ export default function Navbar() {
     <header className="sticky top-0 z-30 border-b border-border bg-bg/80 backdrop-blur-xl">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-accent to-secondary grid place-items-center shadow-[0_0_24px_-6px_rgba(0,212,170,0.5)]">
-            <span className="text-bg font-display font-extrabold">S</span>
-          </div>
+          <Logo
+            size={32}
+            className="rounded-xl shadow-[0_0_24px_-6px_rgba(0,212,170,0.5)]"
+          />
           <span className="heading text-lg hidden sm:block">OweNow</span>
         </Link>
 

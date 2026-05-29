@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../lib/auth.jsx';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import Logo from '../components/Logo.jsx';
 
 export default function Login() {
   const { user, signInWithGoogle } = useAuth();
@@ -31,9 +32,10 @@ export default function Login() {
         className="relative w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center h-16 w-16 rounded-3xl bg-gradient-to-br from-accent to-secondary shadow-[0_0_60px_-12px_rgba(0,212,170,0.6)] mb-5">
-            <span className="font-display font-extrabold text-3xl text-bg">S</span>
-          </div>
+          <Logo
+            size={64}
+            className="inline-block rounded-3xl shadow-[0_0_60px_-12px_rgba(0,212,170,0.6)] mb-5"
+          />
           <h1 className="heading text-4xl mb-2">OweNow</h1>
           <p className="text-text-muted">Split expenses with friends. Without the friction.</p>
         </div>
