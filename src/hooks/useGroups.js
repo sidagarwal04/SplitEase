@@ -108,11 +108,14 @@ export function useInviteMember(groupId) {
   return useMutation({
     mutationFn: async ({ email, groupName }) => {
       const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error('You are signed out. Please sign in again and retry.');
+      }
       const res = await fetch('/api/invite', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session?.access_token ?? ''}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({ email, groupId, groupName }),
       });

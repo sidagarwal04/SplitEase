@@ -9,9 +9,13 @@ export function json(status, body) {
 }
 
 export function adminClient() {
-  const url = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+  const rawUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) throw new Error('Supabase admin env vars not configured');
+  if (!rawUrl) throw new Error('SUPABASE URL env var not configured (set VITE_SUPABASE_URL or SUPABASE_URL)');
+  if (!key)    throw new Error('SUPABASE_SERVICE_ROLE_KEY env var not configured');
+  // Defensive: strip a trailing /rest/v1/ if someone set the env var to the
+  // PostgREST path by mistake — adminClient needs the project base URL.
+  const url = rawUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '');
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
@@ -28,10 +32,8 @@ export async function authUser(event) {
   const admin = adminClient();
   const { data, error } = await admin.auth.getUser(token);
   if (error || !data?.user) {
-    // Surface the real cause so we don't have to dig through function logs.
-    // Common causes: SUPABASE_SERVICE_ROLE_KEY stale, VITE_SUPABASE_URL still
-    // contains /rest/v1/, or the user's JWT was issued by a now-rotated key.
-    console.error('[invite] getUser failed:', error);
+    // Surface the real cause so clients see e.g. "session_not_found" instead
+    // of a generic "Invalid token", which is actionable (re-sign-in).
     const err = new Error(`Invalid token: ${error?.message ?? 'no user returned'}`);
     err.status = 401;
     throw err;

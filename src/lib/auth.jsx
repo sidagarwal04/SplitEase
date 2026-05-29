@@ -29,6 +29,23 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let mounted = true;
 
+    // Drop a locally-cached session whose server-side counterpart is gone
+    // (e.g. JWT references a session_id that no longer exists). Without this,
+    // the SDK keeps reporting "signed in" while every GoTrue call 403s.
+    const validateOrClearSession = async (sess) => {
+      if (!sess) return null;
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data?.user) {
+        console.warn('[OweNow] stored session rejected by server, signing out:', error);
+        await supabase.auth.signOut().catch(() => {});
+        Object.keys(localStorage)
+          .filter((k) => k.startsWith('sb-'))
+          .forEach((k) => localStorage.removeItem(k));
+        return null;
+      }
+      return sess;
+    };
+
     (async () => {
       try {
         const url = new URL(window.location.href);
@@ -44,9 +61,11 @@ export function AuthProvider({ children }) {
         const { data, error } = await supabase.auth.getSession();
         if (error) console.error('[OweNow] getSession error:', error);
         if (!mounted) return;
-        setSession(data?.session ?? null);
+        const validSession = await validateOrClearSession(data?.session ?? null);
+        if (!mounted) return;
+        setSession(validSession);
         // Fire-and-forget — profile is metadata; don't block the loading flag on it.
-        loadProfile(data?.session?.user?.id).catch((e) =>
+        loadProfile(validSession?.user?.id).catch((e) =>
           console.error('[OweNow] loadProfile error:', e)
         );
       } catch (e) {
