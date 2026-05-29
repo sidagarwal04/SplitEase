@@ -186,10 +186,17 @@ create policy "profiles: insert own"
   with check (id = auth.uid());
 
 -- ----- groups ---------------------------------------------------------------
+-- NOTE: creators must be included in the SELECT policy too, otherwise INSERT ... RETURNING
+-- fails: at the moment a group is created, the creator hasn't been inserted into
+-- group_members yet, so is_group_member(id) is false and PostgreSQL hides the RETURNING
+-- row, which aborts the whole INSERT with "new row violates row-level security policy".
 drop policy if exists "groups: members read" on public.groups;
 create policy "groups: members read"
   on public.groups for select
-  using (public.is_group_member(id));
+  using (
+    created_by = auth.uid()
+    or public.is_group_member(id)
+  );
 
 drop policy if exists "groups: any auth can create" on public.groups;
 create policy "groups: any auth can create"
