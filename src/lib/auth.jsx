@@ -79,7 +79,10 @@ export function AuthProvider({ children }) {
         const redirectTo = `${import.meta.env.VITE_APP_URL ?? window.location.origin}/`;
         return supabase.auth.signInWithOAuth({
           provider: 'google',
-          options: { redirectTo },
+          options: {
+            redirectTo,
+            queryParams: { prompt: 'select_account' },
+          },
         });
       },
       signOut: async () => {
