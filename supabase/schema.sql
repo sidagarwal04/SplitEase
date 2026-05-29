@@ -109,6 +109,26 @@ create table if not exists public.notifications (
 
 create index if not exists idx_notifications_user on public.notifications (user_id, is_read, created_at desc);
 
+-- ----------------------------------------------------------------------------
+-- pending_invites
+-- Tracks group invites sent to email addresses that don't yet have a profile.
+-- When the invitee signs up later, the new-user trigger auto-joins them.
+-- NOTE: `email` is always stored lowercased by the invite function so a plain
+-- UNIQUE constraint suffices (and is what supabase-js `onConflict` requires).
+-- ----------------------------------------------------------------------------
+create table if not exists public.pending_invites (
+  id uuid primary key default uuid_generate_v4(),
+  email text not null,
+  group_id uuid not null references public.groups (id) on delete cascade,
+  invited_by uuid not null references public.profiles (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  expires_at timestamptz not null default (now() + interval '30 days'),
+  unique (email, group_id)
+);
+
+create index if not exists idx_pending_invites_email
+  on public.pending_invites (email);
+
 -- ============================================================================
 -- TRIGGER: keep `profiles` in sync with `auth.users`
 -- ============================================================================
@@ -130,6 +150,30 @@ begin
     set email = excluded.email,
         full_name = coalesce(public.profiles.full_name, excluded.full_name),
         avatar_url = coalesce(excluded.avatar_url, public.profiles.avatar_url);
+
+  -- Auto-join any non-expired pending invites addressed to this email.
+  insert into public.group_members (group_id, user_id, role)
+  select pi.group_id, new.id, 'member'
+  from public.pending_invites pi
+  where lower(pi.email) = lower(new.email)
+    and pi.expires_at > now()
+  on conflict (group_id, user_id) do nothing;
+
+  -- Notify the user about each auto-join.
+  insert into public.notifications (user_id, type, message, related_group_id)
+  select new.id,
+         'group_invite',
+         'You were added to "' || g.name || '"',
+         g.id
+  from public.pending_invites pi
+  join public.groups g on g.id = pi.group_id
+  where lower(pi.email) = lower(new.email)
+    and pi.expires_at > now();
+
+  -- Clean up so the same invite doesn't re-fire on profile updates.
+  delete from public.pending_invites
+  where lower(email) = lower(new.email);
+
   return new;
 end;
 $$;
@@ -167,6 +211,18 @@ alter table public.expenses enable row level security;
 alter table public.expense_splits enable row level security;
 alter table public.settlements enable row level security;
 alter table public.notifications enable row level security;
+alter table public.pending_invites enable row level security;
+
+-- ----- pending_invites -------------------------------------------------------
+-- Service role (used by Netlify Functions and the new-user trigger) bypasses
+-- RLS, so writes happen there. Authenticated users can only see invites
+-- addressed to their own email (useful for "you have pending invites" UI).
+drop policy if exists "pending_invites: addressee read" on public.pending_invites;
+create policy "pending_invites: addressee read"
+  on public.pending_invites for select
+  using (
+    lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+  );
 
 -- ----- profiles -------------------------------------------------------------
 drop policy if exists "profiles: read all signed-in" on public.profiles;
