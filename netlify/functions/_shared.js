@@ -28,7 +28,11 @@ export async function authUser(event) {
   const admin = adminClient();
   const { data, error } = await admin.auth.getUser(token);
   if (error || !data?.user) {
-    const err = new Error('Invalid token');
+    // Surface the real cause so we don't have to dig through function logs.
+    // Common causes: SUPABASE_SERVICE_ROLE_KEY stale, VITE_SUPABASE_URL still
+    // contains /rest/v1/, or the user's JWT was issued by a now-rotated key.
+    console.error('[invite] getUser failed:', error);
+    const err = new Error(`Invalid token: ${error?.message ?? 'no user returned'}`);
     err.status = 401;
     throw err;
   }
